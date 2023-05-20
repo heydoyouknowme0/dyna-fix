@@ -1,32 +1,33 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set count=0
+set flgs=0
 
 for /f "tokens=2 delims=:" %%a in ('ipconfig /all ^| findstr /c:"Default Gateway"') do (
-    set /a count+=1
-    if !count! == 1 (
-        set gatewayer=%%a
-        set gateway=!gatewayer:*:=!
-        set gateway=!gateway:~1!
-        for /f "tokens=2" %%b in ("!gatewayer!") do (
-            set gateway=%%b
+    if not "%%a"==" " if !flgs! == 0 (
+    	set gatewayer=%%a
+    	set gateway=!gatewayer:*:=!
+    	set gateway=!gateway:~1!
+    	for /f "tokens=2" %%b in ("!gatewayer!") do (
+        	set gateway=%%b
+    	)
+        echo This gateway is !gateway!
+        choice /M "Do you want to continue?"
+        set option=!errorlevel!
+        if !option! equ 1 (
+            echo running
+            set flgs=1
+        ) else (
+            echo Next
         )
-	  goto :exit_for
-    )
+	)
 )
-:exit_for
-echo The second default gateway is !gateway!
 
-
-choice /M "Do you want to continue?"
-
-if %errorlevel% == 1 (
-    echo running
-) else (
-    echo Script aborted.
-    EXIT
+if !flgs! == 0 (
+	echo Not found
+	EXIT
 )
+
 
 set myServer=web.whatsapp.com
 
