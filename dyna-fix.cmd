@@ -32,6 +32,7 @@ for /f "tokens=*" %%a in ('ipconfig') do (
         choice /M "Do you want to continue?"
         set option=!errorlevel!
         if !option! equ 1 (
+ 		set gateway2=!gateway!
             echo running
             set flgs=1
         ) else (
